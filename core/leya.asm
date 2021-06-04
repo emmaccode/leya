@@ -52,8 +52,6 @@ section .data
 section .bss
 ; Input
   lya resb 64
-; For commands/arguments
-  command resb 32
 section .text
   global _start
 
@@ -77,6 +75,8 @@ section .text
 ; ===============|
 _start:
   jmp _start_repl
+_exit:
+
 ;  ____  ____  ____  __
 ; (  _ \( ___)(  _ \(  )
 ;  )   / )__)  )___/ )(__
@@ -153,6 +153,7 @@ _repl:
   call _prompt
   call _repl_input
   ; Evaluate
+  mov rsi, lya
   call _interpret
   ; Print
   call _return
@@ -208,10 +209,10 @@ _next_byte:
   ; ===============|
   ; _INTERPRET
   ; Calls the parser to put lya data into stack. Once parsed, it performs
-  ; the commands in each array with their respective arguments.
+  ; the commands in each array with their respective arguments. lya code to
+  ; be interpreted should be moved to rsi.
   ; ===============|
 _interpret:
-  mov rsi, lya
   call _parse
   ret
   ; ===============|
