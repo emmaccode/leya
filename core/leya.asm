@@ -38,7 +38,7 @@ section .data
   repl_prompt: db "Leya> "
   ; Key-words
   fn_df: db "function"
-  var_df: db "var"
+  var_df: db "define"
   type_df: db "type"
   stderr: db "raise"
   sys: db "syscall"
@@ -158,7 +158,10 @@ _repl:
   call _return
   ; Loop
   jmp _repl
-
+  ; ===============|
+  ; _REPL_INPUT
+  ; Takes kernel standard in, returns to _repl.
+  ; ===============|
 _repl_input:
   mov rax, 0
   mov rdi, 0
@@ -178,33 +181,45 @@ _prompt:
   syscall
 
   ret
-
-_exit:
-  mov rax, 60
-  mov rdi, 0
-  syscall
 ;  ____  _  _  ____  ____  ____  ____  ____  ____  ____  ____  ____
 ; (_  _)( \( )(_  _)( ___)(  _ \(  _ \(  _ \( ___)(_  _)( ___)(  _ \
 ;  _)(_  )  (   )(   )__)  )   / )___/ )   / )__)   )(   )__)  )   /
 ; (____)(_)\_) (__) (____)(_)\_)(__)  (_)\_)(____) (__) (____)(_)\_)
 ; ===============|
 ; _PARSE
-; Parses array of input code, fills registry command/arg data, then returns to
-; _interpret
+; Parses array of input code, fills registry command/arg data,  puts the data
+; into the stack, and
+; then returns to
+; _interpret or _load
+; Storage goes like this:
+; 1st 2 bytes: length of command call-alias.
+; 3-4 byte: number of arguments.
+; saved argument lengths and arguments are stored in subsequent bytes.
 ; ===============|
 _parse:
   ret
+  ; ===============|
+  ; _NEXT_BYTE
+  ; Jumps to next byte of parsed data. Seperates arrays by spaces, expressions
+  ; by 10 (\n). Completes nested structures using the "end" key-word.
+  ; ===============|
 _next_byte:
   ret
   ; ===============|
-  ; _PARSE
-  ; Parses array of input code, fills registry and data, then returns to
-  ; _interpret
+  ; _INTERPRET
+  ; Calls the parser to put lya data into stack. Once parsed, it performs
+  ; the commands in each array with their respective arguments.
   ; ===============|
 _interpret:
   mov rsi, lya
   call _parse
   ret
+  ; ===============|
+  ; _PROMPT
+  ; For the current iteration, this will provide a system-out syscall
+  ; that merely returns the values typed in. This is a template function
+  ; for the future return of the interpreter.
+  ; ===============|
 _return:
   mov rax, 1
   mov rdi, 1
@@ -212,4 +227,9 @@ _return:
   mov rdx, 64
   syscall
   ret
+  ; ===============|
+  ; _COMPILE
+  ; Compiles portion of code stored in stack. Should be ran from _interpret.
+  ; ===============|
 _compile:
+  ret
