@@ -39,6 +39,7 @@ You will not need to touch this heading, unless you are a maintainer.
 ### PULL REQUEST HEADING
 - Commit description, what functionality or feature does this commit add?
 Add your Github username. below this commit heading as a bullet point.
+Beneath that, we will add your commit number in our next changelog update.
 #### FILENAME
 - File for the alterations currently mentioned.
 ##### section
@@ -46,9 +47,10 @@ Add your Github username. below this commit heading as a bullet point.
 the section which your code belongs to. If there is no section in the file
 you worked with (it is not an assembly file,) then simply type "main."
 Here is a mark-down template for your pull-request:
-```markdown
+```
 ### pull-request
-- **Github-username**
+- **Github-username** \
+- #prnum (you likely will not need to add this.) \
 pull-request description.
 #### modified-file
 ##### modified-section
@@ -68,11 +70,47 @@ head for a file if it **is not**
 ## 0.0.1
 0.0.1 should show the basics of the compiler. By this point, a basic
 interpreter for array-types should be made with some basic functionality.
-While we do not need the ability to use any commands, we need to be able to
-pass them in our arrays and parse them into components. Basic system protocols
-for activating the REPL, and compiling to an output file via command-line args.
+While we do not need the ability to use any commands, we need to be able to pass them in our arrays and parse them into components. Basic system protocols for activating the REPL, and compiling to an output file via command-line args.
+### replcommand
+- **emmettgb**
+- #2 \
+This commit creates a more formulated skeleton for interpretation,
+and completes the repl logic presented from #1, skeleton. It also adds
+a base (though 64-bytes for now) for putting code into memory.
+
+#### leya.asm
+##### DATA
+- Added definitions for key-words:
+function, define, type, raise, syscall, exit, end, and " "
+- Added argument allocation.
+- Added reserve section, .bss.
+- .bss section holds lya allocation
+##### START
+- updated start subroutine call to a jump.
+In the future, this will be a je depending on command-line arguments.
+**Not Updated Functional** \
+##### REPL
+- _repl now performs an exit check from an exit value set in memory.
+If this value is ever stored as 1, the process will end. It calls
+_prompt, and then _repl_input for the read step. Then it calls interpret
+after moving the input data into RSI. After which it then calls _return.
+**Complete**
+##### INTERPRETER
+- Added _next_byte, _parse, _return, and _compile functions. This is
+mostly just skeleton.
+**Complete**
+#### CONTRIBUTING.MD
+- Finsished writing all sections, at least to some extent until
+the project has more wind behind it. **Complete**
+#### TODO.MD
+- Added TODO.md. This file's purpose will be to outline what
+needs to be done next in the project. Hope that was obvious.
+#### README.MD
+- Updated README, with assets/Leya_Round.png and new description.
+----
 ### skeleton
 - **emmettgb**
+- #1 \
 This commit creates a basic skeleton for the entire repository. This
 includes the core, assets such as this changelog, and changes to the
 development tools included with the core.
