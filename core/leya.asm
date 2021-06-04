@@ -44,6 +44,7 @@ section .data
   sys: db "syscall"
   exit: db "exit"
   end_st: db "end"
+  space: db " "
   ; Command-line arguments
   argcstr: db `argc = %d\n\0`
   argvstr: db `argv[%u] = %s\n\0`
@@ -188,13 +189,20 @@ _exit:
 ; (____)(_)\_) (__) (____)(_)\_)(__)  (_)\_)(____) (__) (____)(_)\_)
 ; ===============|
 ; _PARSE
-; Parses array of input code, fills registry and data, then returns to
+; Parses array of input code, fills registry command/arg data, then returns to
 ; _interpret
 ; ===============|
 _parse:
-
   ret
+_next_byte:
+  ret
+  ; ===============|
+  ; _PARSE
+  ; Parses array of input code, fills registry and data, then returns to
+  ; _interpret
+  ; ===============|
 _interpret:
+  mov rsi, lya
   call _parse
   ret
 _return:
