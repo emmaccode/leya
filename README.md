@@ -1,8 +1,13 @@
 <div align = "center">
+# 0.0.0.2
   <img src = "https://github.com/emmettgb/leya/blob/repl-command/assets/Leya_Round.png"
   width = 500 height = 500>
   </img>
 </div>
+=======
+<img src =https://github.com/ChifiSource/leya/blob/main/assets/Leya_Round.png width = 500 height = 500 />
+</div>
+
 
 #  leya
 The Leya programming language is a high-level imperative functional
@@ -48,10 +53,10 @@ Of course, there is also support for basic operations.
 ## Contributing
 There are so many different ways that you can help better the Leya language.
 All of the following could help:
+- Try Leya
 - Learn Leya
 - Share Leya
 - Report bugs/issues
 - Commit code! \
 You may read more on contributing to the Leya language in
 [CONTRIBUTING.MD](https://github.com/emmettgb/leya/blob/repl-command/assets/CONTRIBUTING.md)
-## 0.0.1
