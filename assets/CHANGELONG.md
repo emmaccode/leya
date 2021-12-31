@@ -46,6 +46,7 @@ Add your Github username. below this commit heading as a bullet point.
 the section which your code belongs to. If there is no section in the file
 you worked with (it is not an assembly file,) then simply type "main."
 Here is a mark-down template for your pull-request:
+
 ```markdown
 ### pull-request
 - **Github-username**
@@ -60,6 +61,7 @@ Description of function intention, include blockers, issues, etc.
 - **status key-word**
 Description of function intention, include blockers, issues, etc.
 ```
+
 # Changes
 Here is a list of all the changes that have been made to Leya. One
 exception to note is that you do not need to put modifications to the
@@ -71,6 +73,38 @@ interpreter for array-types should be made with some basic functionality.
 While we do not need the ability to use any commands, we need to be able to
 pass them in our arrays and parse them into components. Basic system protocols
 for activating the REPL, and compiling to an output file via command-line args.
+
+### lya_core
+- **emmettgb**
+This PR draws the planned type system out  in front of us on paper, so it
+gives a clear idea of what we need to write when it comes to bits and bytes. The
+syntax also demonstrates well the possibilities of this paradigm, being defined
+ from abstract collections of things, and reading into a high-performance
+ programming language.
+#### core/leya.lya
+##### Type System
+- Created the type system section, added char and array types.
+- **Not Functional**
+Created the very abstract type system, the point of all of this PR is
+to get a skeleton of code that we want to execute and define everything correct
+this is essential for testing.
+##### Essentials
+- Added return()
+- **Not Functional**
+Added return, does not really do anything.
+#### core/leya.lya
+##### Types
+- Added some template function calls.
+- **Not Functional**
+##### Base Types
+- Added print function.
+- Added Int64
+- **Not Functional**
+Print function uses syscall with position of val's alias in memory.
+##### Operators
+- Added some template function calls.
+- **Not Functional**
+
 ### skeleton
 - **emmettgb**
 This commit creates a basic skeleton for the entire repository. This
