@@ -1,15 +1,9 @@
 <div align = "center">
-# 0.0.0.2
-  <img src = "https://github.com/emmettgb/leya/blob/repl-command/assets/Leya_Round.png"
-  width = 500 height = 500>
-  </img>
-</div>
-=======
 <img src =https://github.com/ChifiSource/leya/blob/main/assets/Leya_Round.png width = 500 height = 500 />
 </div>
 
 
-#  leya
+#  leya 0.0.0.3
 The Leya programming language is a high-level imperative functional
 programming language. Leya works by being built off a base of syscalls and
 basic functionality that resides within elements of different arrays. Everything
