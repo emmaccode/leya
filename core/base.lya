@@ -1,16 +1,41 @@
 # base.lya
 use leya
 # ______________________________
-# Types                    -------
+# Base Types             -------
 
-n length(val : Array) do
+# Numbers
+number_chars = []
+
+Number = [val : Char] sub Char end
+
+CompoundNumber = [val : Array] sub Array end
+
+ImaginaryNumber  = [val : Char] sub
+  [val : Char, im]
+end
+
+Float = [val : Number] sub Number end
+
+Complex = [Real : Number, im : ImaginaryNumber] sub
+  ComplexNumber
+  [Real : Float64, +, im : ImaginaryNumber]
+end
+
+CummulativeNumber []
+
+Int64 = [val : Char]
+
+length = [val : Array] do
 
 end
+
+String
+String
 
 # ______________________________
 # I/O                    -------
 
-n print [val : Char] do
+print = [val : Char] do
   mov [rax, 1]
   mov [rdi, 1]
   mov [rsi, val]
@@ -18,11 +43,11 @@ n print [val : Char] do
   syscall
 end
 
-n print [val : Any] do
+print = [val : Any] do
   mov [rax, 1]
   mov [rdi, 1]
   mov [rsi, val]
-  mov [rdx, 1]
+  mov [rdx, length(val)]
   syscall
 end
 
@@ -30,10 +55,8 @@ end
 # Operators              -------
 # Still want 5 + 5, not + 5 5
 
-n + [...operands : Integer] sub
++  = [...operands : Integer] sub
   n [operands [1], self [1], operands [2]]
   do
 
 end
-# ______________________________
-# Base Types             -------

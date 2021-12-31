@@ -1,9 +1,10 @@
-n leya [... : Any]
+leya = [... : Any]
 
 # This sets the scope to a new alias:
-scope [leya]
+in [leya]
 # You can call definitions in a scope using ., this includes from any other
-#      scope.
+#      scope. We change scope by using the in function.
+
 # ______________________________
 # Type System  -----------------
 
@@ -15,23 +16,23 @@ be represented in one 1-byte of data. In other words, anything that inherits
 this char type can only have an index, i.e. is a data-type not a structure. Thus,
 any type that does not inherit char is considered an iterable.
 """
-n Char [val : Any]
+Char = [val : Any]
 
 """
 - Leya core
 # leya.Array [... : Char]
 The Leya.Array list is the top of the type heirarchy for all data-structures.
-This includes 
+This includes
 """
-n Array [... : Char]
+Array = [... : Char]
 
 # ______________________________
 # Essentials   -----------------
 
-n return [val : Char] do
+return = [val : Char] do
 
 end
 
-n return [val : Array] do
+return = [val : Array] do
 
 end
