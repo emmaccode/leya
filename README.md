@@ -3,17 +3,17 @@
 </div>
 
 
-#  leya 0.0.0.3
+#  leya 0.0.0.4
 The Leya programming language is a high-level imperative functional
 programming language. Leya works by being built off a base of syscalls and
 basic functionality that resides within elements of different arrays. Everything
 in Leya consists of arrays atop arrays. Each array is a command followed by
 parameters.
 ## Future Plans
-You make look at the localized
-[TODO.MD](https://github.com/emmettgb/leya/blob/repl-command/assets/CONTRIBUTING.md)
- list and
-[CHANGELOG.MD](https://github.com/emmettgb/leya/blob/repl-command/assets/CHANGELOG.md) in order to get a
+You may look at the localized
+[CONTRIBUTING.MD](https://github.com/ChifiSource/leya/blob/main/assets/CONTRIBUTING.md)
+ and
+[CHANGELOG.MD](https://github.com/ChifiSource/leya/blob/main/assets/CHANGELOG.md) in order to get a
 better idea of the direction of the language, and what we are working on at this
 time. However, here is a list of the things that are exciting and planned for
 this language:
@@ -26,10 +26,21 @@ arguments.
 - Syscalls. This language can act as an interface to standard kernel calls.
 This will be the backbone to structuring the language in itself. For example,
 consider the base defining the following print function:
-```julia
-function print x string
-  define int n len x
-  syscall 1 1 x n
+```lya
+print = [val : Char] do
+  mov [rax, 1]
+  mov [rdi, 1]
+  mov [rsi, val]
+  mov [rdx, 1]
+  syscall
+end
+
+print = [val : Any] do
+  mov [rax, 1]
+  mov [rdi, 1]
+  mov [rsi, val]
+  mov [rdx, length [val]]
+  syscall
 end
 ```
 The leya compiler handles the memory for us, that is the primary objective of
