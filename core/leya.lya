@@ -1,0 +1,37 @@
+n leya [... : Any]
+
+# This sets the scope to a new alias:
+scope [leya]
+# You can call definitions in a scope using ., this includes from any other
+#      scope.
+# ______________________________
+# Type System  -----------------
+
+"""
+- Leya core
+# leya.Char [val : Any]
+The Leya.Char list is used to represent a singular value, a value that can
+be represented in one 1-byte of data. In other words, anything that inherits
+this char type can only have an index, i.e. is a data-type not a structure. Thus,
+any type that does not inherit char is considered an iterable.
+"""
+n Char [val : Any]
+
+"""
+- Leya core
+# leya.Array [... : Char]
+The Leya.Array list is the top of the type heirarchy for all data-structures.
+This includes 
+"""
+n Array [... : Char]
+
+# ______________________________
+# Essentials   -----------------
+
+n return [val : Char] do
+
+end
+
+n return [val : Array] do
+
+end
