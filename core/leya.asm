@@ -37,9 +37,18 @@
 section .data
 ; prompt
   repl_prompt db "< leya >", 10
-  array_open db "["
-  array_close db "]"
-  array_del db "..."
+
+  ; Basic necessary bytes/collections
+  ; operators
+  logical_open db "["
+  logical_close db "]"
+  collection db "..."
+  collection_noc db "...|"
+  ; Registered calls
+  _sub db "sub"
+  _in db "in"
+
+
   ; prompt_head:
   head_prnt1 db " __    ____", 10, "(  )  ( ___)=========================|", 10
   head_prnt2 db " )(__  )__)      Version 0.0.0.3     |", 10
@@ -146,14 +155,14 @@ _prompt:
   ; exit flag. If the exit flag has not been changed, then jumps to itself.
   ; ===============|
 _repl:
+; Read
   call _prompt
-  mov rax, 0
-  mov rdi, 0
-  mov rsi, rbx
-  mov rdx, 30000
-  syscall
-  push [rbx], 30000
-  call _interpret
+  call _stdin
+  ; Evaluate
+;  call _interpret
+    ; Print
+  call _stdout
+  ;     Loop
   jmp _repl
 ;   (
 ;   )\        (      (
@@ -163,12 +172,43 @@ _repl:
 ; | (__ / _ \| '_|/ -_)
 ; \___|\___/|_|  \___|
 
+; I/O
+_stdin:
+  mov rax, 0
+  mov rdi, 0
+  mov rsi, rbx
+  mov rdx, 30000
+  syscall
+  mov rax, rbx
+  ret
 
+_stdout:
+  push rax
+  call _outloop
+
+_outloop:
+  inc rax
+  inc rcx
+  mov cl, [rax]
+  cmp cl, 0
+  jne _outloop
+
+  mov rax, 1
+  mov rdi, 1
+  pop rsi
+  mov rdx, rbx
+  syscall
+  ret
+
+  ; Errors
+
+_error:
+  call stdout
   ;  ____  _  _  ____  ____  ____  ____  ____  ____  ____  ____  ____
   ; (_  _)( \( )(_  _)( ___)(  _ \(  _ \(  _ \( ___)(_  _)( ___)(  _ \
   ;  _)(_  )  (   )(   )__)  )   / )___/ )   / )__)   )(   )__)  )   /
   ; (____)(_)\_) (__) (____)(_)\_)(__)  (_)\_)(____) (__) (____)(_)\_)
-  
+
   ; ===============|
   ; _PARSE
   ; Parses array of input code, fills registry and data, then returns to
