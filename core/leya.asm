@@ -1,3 +1,4 @@
+
 ;         .-.
 ;        ((`-)
 ;         \\     (\/)
@@ -13,47 +14,47 @@
 ;		 __    ____
 ;		(  )  ( ___)=========================|
 ;		 )(__  )__)      Version 0.0.1       |
-;		(____)(____)  Copyright (C) 2021     |
+;		(____)(____)  NO Copyright (C) 2021  |
 ;		 _  _   __|==========================|
 ;		( \/ ) /__\  Programmed By           |
-;		 \  / /(__)\        Emmett Boudreau  |
+;		 \  / /(__)\        Emmy Boudreau    |
 ;		 (__)(__)(__)========================|
-;                                        |
+;    The Leya project is open-source,    |
+;    MIT-licensed software. This         |
+;    compiler may be duplicated or       |
+;    modified for personal AND           |
+;    professional use, my only request   |
+;    Is that my name remain here, in this|
+;             REPL and code. Thanks.     |
 ;========================================|
+; This is the core file of leya, it holds the leya interpreter
+; and loads the do, sub, and alias tables.
+
 ; ____    __   ____   __
 ;(  _ \  /__\ (_  _) /__\
 ; )(_) )/(__)\  )(  /(__)\
 ;(____/(__)(__)(__)(__)(__)
 section .data
+; prompt
+  repl_prompt db "< leya >", 10
+  array_open db "["
+  array_close db "]"
+  array_del db "..."
   ; prompt_head:
-  head_prnt1: db " __    ____", 10, "(  )  ( ___)=========================|", 10
-  head_prnt2: db " )(__  )__)      Version 0.0.1       |", 10
-  head_prnt3: db "(____)(____)  Copyright (C) 2021     |", 10
-  head_prnt4: db " _  _   __|==========================|", 10
-  head_prnt5: db "( \/ ) /__\  Programmed By           |", 10
-  head_prnt6: db " \  / /(__)\        Emmett Boudreau  |", 10
-  head_prnt7: db " (__)(__)(__)========================|", 10
-  exit_check: db 0
-  ; Leya prompt:
-  repl_prompt: db "Leya> "
-  ; Key-words
-  fn_df: db "function"
-  var_df: db "define"
-  type_df: db "type"
-  stderr: db "raise"
-  sys: db "syscall"
-  exit: db "exit"
-  end_st: db "end"
-  space: db " "
-  ; Command-line arguments
-  argcstr: db `argc = %d\n\0`
-  argvstr: db `argv[%u] = %s\n\0`
-  clis: db 0
+  head_prnt1 db " __    ____", 10, "(  )  ( ___)=========================|", 10
+  head_prnt2 db " )(__  )__)      Version 0.0.0.3     |", 10
+  head_prnt3 db "(____)(____)  Copyright (C) 2021     |", 10
+  head_prnt4 db " _  _   __|==========================|", 10
+  head_prnt5 db "( \/ ) /__\  Programmed By           |", 10
+  head_prnt6 db " \  / /(__)\        Emmy   Boudreau  |", 10
+  head_prnt7 db " (__)(__)(__)========================|", 10
+
 section .bss
-; Input
-  lya resb 64
+  uname resb 20
+  lya resb 30
 section .text
   global _start
+
 
 ;  ___  ____   __    ____  ____
 ; / __)(_  _) /__\  (  _ \(_  _)
@@ -67,21 +68,19 @@ section .text
 ;v======+======+======+===================================================v
 ;| arg1 | arg2 | arg3 |    does:                                          |
 ;+======+======+======+===================================================+
+;+------+------+------+--Basic CLI's--------------------------------------+
 ;| -v   |      |      | Prints out version information.                   |
-;+------+------+------+---------------------------------------------------+
+;|-help |      |      | Prints out argument information for CLIs.         |
+;+------+------+------+--Compiling--------------------------------------+
 ;| -o   | uri1 | uri2 | Compiles file-input. arg2 is the file we want     |
 ;|      |      |      | to compile, arg2 is the output filename.          |
+;| uri  |      |      | Runs file at uri inside of REPL.                  |
 ;L------+------+------+--------------------------------------------------w
 ; ===============|
 _start:
+  ; Parse CLI's, no CLI's we start_repl
   jmp _start_repl
-_exit:
 
-;  ____  ____  ____  __
-; (  _ \( ___)(  _ \(  )
-;  )   / )__)  )___/ )(__
-; (_)\_)(____)(__)  (____)
-; ===============|
 ; _START_REPL
 ; Allocates data for REPL, calls _repl_printout:, followed by _repl. On ret
 ; from repl, will ret to _start. Start will then call syscall 60 (exit).
@@ -89,7 +88,6 @@ _exit:
 _start_repl:
   call _repl_printout
   jmp _repl
-;  ret
 ; ===============|
 ; _REPL_PRINTOUT
 ; Prints leya header, returns to _start_repl:.
@@ -100,76 +98,36 @@ _repl_printout:
   mov rsi, head_prnt1
   mov rdx, 51
   syscall
-
   mov rax, 1
   mov rdi, 1
   mov rsi, head_prnt2
   mov rdx, 39
   syscall
-
   mov rax, 1
   mov rdi, 1
   mov rsi, head_prnt3
   mov rdx, 39
   syscall
-
   mov rax, 1
   mov rdi, 1
   mov rsi, head_prnt4
   mov rdx, 39
   syscall
-
   mov rax, 1
   mov rdi, 1
   mov rsi, head_prnt5
   mov rdx, 39
   syscall
-
   mov rax, 1
   mov rdi, 1
   mov rsi, head_prnt6
   mov rdx, 39
   syscall
-
   mov rax, 1
   mov rdi, 1
   mov rsi, head_prnt7
   mov rdx, 39
   syscall
-
-  ret
-  ; ===============|
-  ; _REPL
-  ; Prints prompt by calling _show_prompt:
-  ;, takes input, calls _parse:, on ret, checks for change in
-  ; exit flag. If the exit flag has not been changed, then jumps to itself.
-  ; ===============|
-_repl:
-  ; Check for exit code set to 1:
-  mov rdi, 1
-  cmp rdi, exit_check
-  je _exit
-  ; Read
-  call _prompt
-  call _repl_input
-  ; Evaluate
-  mov rsi, lya
-  call _interpret
-  ; Print
-  call _return
-  ; Loop
-  jmp _repl
-  ; ===============|
-  ; _REPL_INPUT
-  ; Takes kernel standard in, returns to _repl.
-  ; ===============|
-_repl_input:
-  mov rax, 0
-  mov rdi, 0
-  mov rsi, lya
-  mov rdx, 64
-  syscall
-  ret
   ; ===============|
   ; _PROMPT
   ; Prints prompt, returns to _repl
@@ -178,59 +136,56 @@ _prompt:
   mov rax, 1
   mov rdi, 1
   mov rsi, repl_prompt
-  mov rdx, 6
+  mov rdx, 9
   syscall
+  ret
+  ; ===============|
+  ; _REPL
+  ; Prints prompt by calling _show_prompt:
+  ;, takes input, calls _parse:, on ret, checks for change in
+  ; exit flag. If the exit flag has not been changed, then jumps to itself.
+  ; ===============|
+_repl:
+  call _prompt
+  mov rax, 0
+  mov rdi, 0
+  mov rsi, rbx
+  mov rdx, 30000
+  syscall
+  push [rbx], 30000
+  call _interpret
+  jmp _repl
+;   (
+;   )\        (      (
+;  (((_)   (   )(    ))\
+;  )\___   )\ (()\  /((_)
+;((/ __| ((_) ((_)(_))
+; | (__ / _ \| '_|/ -_)
+; \___|\___/|_|  \___|
 
+
+  ;  ____  _  _  ____  ____  ____  ____  ____  ____  ____  ____  ____
+  ; (_  _)( \( )(_  _)( ___)(  _ \(  _ \(  _ \( ___)(_  _)( ___)(  _ \
+  ;  _)(_  )  (   )(   )__)  )   / )___/ )   / )__)   )(   )__)  )   /
+  ; (____)(_)\_) (__) (____)(_)\_)(__)  (_)\_)(____) (__) (____)(_)\_)
+  
+  ; ===============|
+  ; _PARSE
+  ; Parses array of input code, fills registry and data, then returns to
+  ; either _REPL or _RUN
+  ; ===============|
+  _parse:
+
+    ; ===============|
+    ; _INTERPRET
+    ; defines arrays out of the data with starts and stops.
+    ; Calls parsing algorithm
+    ; compiles, executes associated lya code
+    ; ===============|
+  _interpret:
   ret
-;  ____  _  _  ____  ____  ____  ____  ____  ____  ____  ____  ____
-; (_  _)( \( )(_  _)( ___)(  _ \(  _ \(  _ \( ___)(_  _)( ___)(  _ \
-;  _)(_  )  (   )(   )__)  )   / )___/ )   / )__)   )(   )__)  )   /
-; (____)(_)\_) (__) (____)(_)\_)(__)  (_)\_)(____) (__) (____)(_)\_)
-; ===============|
-; _PARSE
-; Parses array of input code, fills registry command/arg data,  puts the data
-; into the stack, and
-; then returns to
-; _interpret or _load
-; Storage goes like this:
-; 1st 2 bytes: length of command call-alias.
-; 3-4 byte: number of arguments.
-; saved argument lengths and arguments are stored in subsequent bytes.
-; ===============|
-_parse:
-  ret
-  ; ===============|
-  ; _NEXT_BYTE
-  ; Jumps to next byte of parsed data. Seperates arrays by spaces, expressions
-  ; by 10 (\n). Completes nested structures using the "end" key-word.
-  ; ===============|
-_next_byte:
-  ret
-  ; ===============|
-  ; _INTERPRET
-  ; Calls the parser to put lya data into stack. Once parsed, it performs
-  ; the commands in each array with their respective arguments. lya code to
-  ; be interpreted should be moved to rsi.
-  ; ===============|
-_interpret:
-  call _parse
-  ret
-  ; ===============|
-  ; _PROMPT
-  ; For the current iteration, this will provide a system-out syscall
-  ; that merely returns the values typed in. This is a template function
-  ; for the future return of the interpreter.
-  ; ===============|
-_return:
-  mov rax, 1
-  mov rdi, 1
-  mov rsi, lya
-  mov rdx, 64
-  syscall
-  ret
-  ; ===============|
-  ; _COMPILE
-  ; Compiles portion of code stored in stack. Should be ran from _interpret.
-  ; ===============|
-_compile:
-  ret
+
+
+  _compile:
+
+  _execute:
