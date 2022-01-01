@@ -14,26 +14,7 @@ building from source yourself. In Leya's current state, there are no
 binaries available, so you will have to assemble Leya yourself. This
 process is automated, you simply need to source devtools/compile_load.sh
 ## Learn Leya
-Leya has high-level syntax with low, level imperative interfaces. What is
-cool about this methodology is that it can provide a very iterative
-programming experience with some very high-level syntax. I am writing
-this markdown before the compiler has been built, but the syntax
-should ultimately come out to look like this, for example.
-```julia
-function hello_world
-  print "Hello!"
-end
 
-type normal
-  mean float
-  std float
-end
-# comment
-function mean x array
-  define int summation sum x
-  define int len length x
-  return / summation len
-end
 ```
 This language is in a lot of ways, Julia-based. The idea is to do some
 of the things the Julia language has accomplished off a much more Lisp-like framework. JIT compilation and multiple dispatch will be combined
