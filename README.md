@@ -45,16 +45,7 @@ end
 ```
 The leya compiler handles the memory for us, that is the primary objective of
 the language itself. The language stores definitions in aliased portions of
-stack. Here we pass those syscalls in order to call the future _scall: code:
-```assembly
-_scall:
-mov rax, arg1
-mov rdi, arg2
-mov rsi, arg3
-mov rdx, arg4
-syscall
-```
-Of course, there is also support for basic operations.
+stack.
 ## Contributing
 There are so many different ways that you can help better the Leya language.
 All of the following could help:
